@@ -1,3 +1,30 @@
-.hello {
-	color: red;
+.menuContent {
+	display: none;
+	position: fixed;
+	flex-direction: column;
+	width: max-content;
+	background-color: rgb(211, 211, 211);
+	gap: 10px;
+	padding: 10px;
+}
+
+.dropDownBtn {
+	width: max-content;
+	height: 30px;
+	background-color: rgb(189, 189, 189);
+	border: solid black 1px;
+}
+
+.dropDownBtn:hover {
+	background-color: rgb(129, 129, 129);
+}
+
+.dropDown {
+	height: min-content;
+	width: min-content;
+}
+
+nav {
+	display: flex;
+	gap: 1px;
 }
