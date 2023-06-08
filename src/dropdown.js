@@ -1,11 +1,17 @@
+import downArrow from "./imgs/icons/downArrow.svg";
+
 const dropDownMenu = (menuText, ...subMenuItems) => {
 	const menuItems = Array.from(subMenuItems);
+	const myArrow = new Image();
+	myArrow.src = downArrow;
 
 	const dropDown = document.createElement("div");
 	dropDown.classList.add("dropDown");
+
 	const dropDownBtn = document.createElement("button");
 	dropDownBtn.classList.add("dropDownBtn");
-	dropDownBtn.textContent = menuText;
+	dropDownBtn.textContent = `${menuText}`;
+	dropDownBtn.append(myArrow);
 	const menuContent = document.createElement("div");
 	menuContent.classList.add("menuContent");
 	menuItems.forEach((item) => {
