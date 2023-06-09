@@ -25,7 +25,8 @@ const imageSlider = () => {
 	let currentpos = 0;
 	back.src = navBack;
 	next.src = navNext;
-
+	const maxSlide = (images.length - 1) * -500;
+	console.log(maxSlide);
 	const imagesContainer = document.createElement("div");
 	images.forEach((img) => {
 		imagesContainer.append(img);
@@ -34,6 +35,8 @@ const imageSlider = () => {
 	imagesContainer.classList.add("imagesContainer");
 	const sliderContainer = document.createElement("div");
 	const imgWindow = document.createElement("div");
+	const dotContainer = document.createElement("div");
+	dotContainer.classList.add("dotContainer");
 
 	const navContainer = document.createElement("nav");
 	navContainer.classList.add("navContainer");
@@ -43,15 +46,32 @@ const imageSlider = () => {
 
 	next.addEventListener("click", () => {
 		const imgcontainer = document.querySelector(".imagesContainer");
-		imgcontainer.style.transform = `translate(${currentpos - offset}px)`;
-		currentpos -= offset;
+		if (!(currentpos === maxSlide)) {
+			imgcontainer.style.transform = `translate(${currentpos - offset}px)`;
+			currentpos -= offset;
+		}
 	});
+
+	back.addEventListener("click", () => {
+		const imgcontainer = document.querySelector(".imagesContainer");
+		if (!(currentpos === 0)) {
+			imgcontainer.style.transform = `translate(${currentpos + offset}px)`;
+			currentpos += offset;
+		}
+	});
+
+	for (let i = 0; i < images.length; i++) {
+		const dot = document.createElement("div");
+		dot.classList.add("dot");
+		dotContainer.append(dot);
+	}
 
 	navContainer.append(back);
 	navContainer.append(next);
 	imgWindow.append(imagesContainer);
 	imgWindow.append(navContainer);
 	sliderContainer.append(imgWindow);
+	sliderContainer.append(dotContainer);
 	return sliderContainer;
 };
 export default imageSlider;
