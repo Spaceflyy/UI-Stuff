@@ -16,4 +16,5 @@ nav.appendChild(
 );
 
 document.body.append(nav);
-document.body.append(imgSlider());
+document.body.append(imgSlider.sliderContainer);
+imgSlider.updateDotFill();

@@ -11,22 +11,23 @@ import stars from "./imgs/stars.jpg";
 const imagesSrc = [blossom, building, leaves, road, sky, stars];
 const images = [];
 
-imagesSrc.forEach((img) => {
+for (let i = 0; i < imagesSrc.length; i++) {
 	const newImage = new Image();
-	newImage.src = img;
-
+	newImage.src = imagesSrc[i];
+	newImage.setAttribute("id", i);
 	images.push(newImage);
-});
-
+}
 const imageSlider = () => {
+	let currentImage = 0;
 	const back = new Image();
 	const next = new Image();
 	const offset = 500;
 	let currentpos = 0;
 	back.src = navBack;
 	next.src = navNext;
+
 	const maxSlide = (images.length - 1) * -500;
-	console.log(maxSlide);
+	const minSlide = 0;
 	const imagesContainer = document.createElement("div");
 	images.forEach((img) => {
 		imagesContainer.append(img);
@@ -44,27 +45,77 @@ const imageSlider = () => {
 	sliderContainer.classList.add("sliderContainer");
 	imgWindow.classList.add("imgWindow");
 
-	next.addEventListener("click", () => {
-		const imgcontainer = document.querySelector(".imagesContainer");
-		if (!(currentpos === maxSlide)) {
-			imgcontainer.style.transform = `translate(${currentpos - offset}px)`;
-			currentpos -= offset;
-		}
-	});
-
-	back.addEventListener("click", () => {
-		const imgcontainer = document.querySelector(".imagesContainer");
-		if (!(currentpos === 0)) {
-			imgcontainer.style.transform = `translate(${currentpos + offset}px)`;
-			currentpos += offset;
-		}
-	});
-
 	for (let i = 0; i < images.length; i++) {
 		const dot = document.createElement("div");
+		dot.setAttribute("data-dot-number", i);
+		dot.setAttribute("data-img-position", offset * -i);
 		dot.classList.add("dot");
 		dotContainer.append(dot);
 	}
+
+	const updateDotFill = () => {
+		const dots = Array.from(document.getElementsByClassName("dot"));
+		dots.forEach((dot) => {
+			dot.classList.remove("dotFilled");
+			if (currentImage === Number(dot.getAttribute("data-dot-number"))) {
+				dot.classList.add("dotFilled");
+			}
+		});
+	};
+
+	const updateSlider = (slideAmount) => {
+		const imgcontainer = document.querySelector(".imagesContainer");
+		currentpos += slideAmount;
+		imgcontainer.style.transform = `translate(${currentpos}px)`;
+	};
+
+	const setSliderPosition = (position) => {
+		const imgcontainer = document.querySelector(".imagesContainer");
+		currentpos = position;
+
+		imgcontainer.style.transform = `translate(${currentpos}px)`;
+	};
+
+	const nextImage = () => {
+		if (currentpos === maxSlide) {
+			currentImage = 0;
+			updateSlider(Math.abs(maxSlide));
+		} else {
+			currentImage += 1;
+			updateSlider(-offset);
+		}
+		updateDotFill();
+	};
+
+	const previousImage = () => {
+		if (currentpos === minSlide) {
+			currentImage = images.length - 1;
+			updateSlider(maxSlide);
+		} else {
+			currentImage -= 1;
+			updateSlider(offset);
+		}
+		updateDotFill();
+	};
+	next.addEventListener("click", () => {
+		nextImage();
+	});
+
+	back.addEventListener("click", () => {
+		previousImage();
+	});
+
+	sliderContainer.addEventListener("click", (event) => {
+		if (event.target.classList.contains("dot")) {
+			setSliderPosition(Number(event.target.getAttribute("data-img-position")));
+			currentImage = Number(event.target.getAttribute("data-dot-number"));
+			updateDotFill();
+		}
+	});
+
+	setInterval(() => {
+		nextImage();
+	}, 5000);
 
 	navContainer.append(back);
 	navContainer.append(next);
@@ -72,6 +123,7 @@ const imageSlider = () => {
 	imgWindow.append(navContainer);
 	sliderContainer.append(imgWindow);
 	sliderContainer.append(dotContainer);
-	return sliderContainer;
+
+	return { sliderContainer, updateDotFill };
 };
-export default imageSlider;
+export default imageSlider();
